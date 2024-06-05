@@ -35,6 +35,9 @@ bugs = "https://github.com/philroche/ubuntu_package_download/issues"
 changelog = "https://github.com/philroche/ubuntu_package_download/blob/master/changelog.md"
 homepage = "https://github.com/philroche/ubuntu_package_download"
 
+[project.scripts]
+ubuntu-package-download = "ubuntu_package_download.cli:app"
+
 [tool.setuptools]
 package-dir = {"" = "src"}
 
