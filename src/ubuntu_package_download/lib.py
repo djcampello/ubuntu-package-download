@@ -2,10 +2,6 @@
 
 import faulthandler
 import functools
-import logging
-import sys
-
-import click
 
 from debian import debian_support
 from launchpadlib.launchpad import Launchpad
