@@ -14,17 +14,18 @@ from launchpadlib.uris import service_roots
 faulthandler.enable()
 
 
-def _get_binary_package_publishing_histories(archive, version, binary_package_name):
+def _get_binary_package_publishing_histories(archive, version, binary_package_name, fallback_distro_arch_series=None):
     binary_publish_histories = archive.getPublishedBinaries(
         exact_match=True,
         version=version,
         binary_name=binary_package_name,
         order_by_date=True,
+        distro_arch_series=fallback_distro_arch_series,
     )
     return binary_publish_histories
 
 def download_deb(
-    package_name, package_version, package_architecture="amd64", fallback=False, series=None):
+    package_name, package_version, package_architecture="amd64", fallback=False, fallback_series=None):
     """
     Download a deb from launchpad for a specific package version and architecture
     """
@@ -40,9 +41,6 @@ def download_deb(
     ubuntu = launchpad.distributions["ubuntu"]
 
     archive = ubuntu.main_archive
-
-    # lp_series = ubuntu.getSeries(name_or_version=package_series)
-    # lp_arch_series = lp_series.getDistroArchSeries(archtag=package_architecture)
 
     # Is this a series specific version
     deb_version = debian_support.Version(package_version)
@@ -110,8 +108,11 @@ def download_deb(
                 f"INFO: \tFALLBACK - Attempting to find and download the next version of "
                 f"{package_name} {package_architecture}..."
             )
+            fallback_lp_series = ubuntu.getSeries(name_or_version=fallback_series)
+            fallback_lp_arch_series = fallback_lp_series.getDistroArchSeries(archtag=package_architecture)
+
             binary_publishing_histories_all_versions = _get_binary_package_publishing_histories(
-                archive, None, package_name
+                archive, None, package_name, fallback_distro_arch_series=fallback_lp_arch_series
             )
             if len(binary_publishing_histories_all_versions):
                 next_binary_package_version = None
