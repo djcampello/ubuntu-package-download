@@ -116,6 +116,7 @@ def download_deb(
             )
             if len(binary_publishing_histories_all_versions):
                 next_binary_package_version = None
+                previous_binary_package_version = None
                 build_package_versions = []
                 for binary_publishing_history in binary_publishing_histories_all_versions:
                     build_package_version = binary_publishing_history.binary_package_version
@@ -128,7 +129,7 @@ def download_deb(
 
                     version_comparison = debian_support.version_compare(build_package_version,
                                                                         package_version)
-                    if version_comparison > 0:
+                    if version_comparison >= 0:
                         """
                         > 0 The version build_package_version is greater than version package_version.
 
@@ -137,9 +138,12 @@ def download_deb(
                         < 0 The version current_package_version is less than version previous_package_version.
                         """
                         next_binary_package_version = build_package_version
-                    else:
-                        # This is a version equal to or lower than the current version so we can break from the
-                        # loop knowing that we now know the next newest version that has a build publishing history
+                    elif version_comparison < 0:
+                        # This is a version lower than the current version so we can break from the
+                        # loop knowing that we now know the previous version that has a build publishing history
+                        previous_binary_package_version = build_package_version
+                        # The list is sorted is descending order so we can break once we find the first version
+                        # that is lower than the queried version.
                         break
 
                 if next_binary_package_version:
@@ -148,6 +152,16 @@ def download_deb(
                     )
                     download_deb(
                         package_name, next_binary_package_version, package_architecture
+                    )
+                elif not next_binary_package_version and previous_binary_package_version:
+                    print(
+                        f"INFO: \tFALLBACK - Version in same series {fallback_series} of {package_name} greater than queried version {package_version} was not found."
+                    )
+                    print(
+                        f"INFO: \tFALLBACK - Found previous version {previous_binary_package_version} of {package_name} {package_architecture} in series {fallback_series} (queried version was {package_version})."
+                    )
+                    download_deb(
+                        package_name, previous_binary_package_version, package_architecture
                     )
             else:
                 print(
