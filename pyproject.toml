@@ -18,7 +18,11 @@ classifiers = [
 ]
 license = {text = "GNU General Public License v3"}
 dependencies = [
-  "typer"
+    "typer",
+    "launchpadlib",
+    "python-debian",
+    "rich",
+    "typing-extensions",
 ]
 
 [project.optional-dependencies]
