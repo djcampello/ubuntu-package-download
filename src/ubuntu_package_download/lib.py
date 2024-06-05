@@ -20,6 +20,7 @@ def _get_binary_package_publishing_histories(archive, version, binary_package_na
     )
     return binary_publish_histories
 
+
 def download_deb(
     package_name, package_version, package_architecture="amd64", fallback=False, fallback_series=None):
     """
