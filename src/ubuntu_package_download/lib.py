@@ -39,7 +39,6 @@ def download_deb(
     archive = ubuntu.main_archive
 
     # Is this a series specific version
-    deb_version = debian_support.Version(package_version)
     binary_publishing_histories = _get_binary_package_publishing_histories(
         archive, package_version, package_name
     )
