@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ubuntu_package_download"
-version = "0.0.2"
+version = "0.0.3"
 description = "Helpful utility to download Ubuntu debian packages"
 readme = "README.rst"
 authors = [
