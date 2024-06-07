@@ -20,6 +20,8 @@ def main(
         Annotated[str, typer.Option(help="Package name")],
     package_version:
         Annotated[str, typer.Option(help="Package version")],
+    series:
+        Annotated[str, typer.Option(help="The Ubuntu series eg. '20.04' or 'focal'. This is only used when --fallback is set.")],
     logging_level:
         Annotated[str, typer.Option(
             help="How detailed would you like the output.",
@@ -28,24 +30,19 @@ def main(
         Annotated[str, typer.Option(help="The architecture of the package you want to download.")] = "amd64",
     fallback:
         Annotated[bool, typer.Option(help="If the exact version cannot be found should we download the next version?")] = False,
-    fallback_series:
-        Annotated[str, typer.Option(help="The Ubuntu series eg. '20.04' or 'focal'. This is only used when --fallback is set.")] = None,
     ):
     """Console script for ubuntu_package_download."""
-    if fallback and not fallback_series:
-        raise typer.BadParameter("If you want to fallback you need to specify a fallback series")
-
     console.print(f"Package name is {package_name}")
     console.print(f"Package version is {package_version}")
     console.print(f"Logging level is {logging_level}")
     console.print(f"Package architecture is {package_architecture}")
+    console.print(f"Series is {series}")
     console.print(f"Fallback is {fallback}")
-    console.print(f"Fallback Series is {fallback_series}")
 
     level = logging.getLevelName(logging_level)
     logging.basicConfig(level=level, stream=sys.stderr, format="%(asctime)s [%(levelname)s] %(message)s")
 
-    download_deb(package_name, package_version, package_architecture, fallback, fallback_series)
+    download_deb(package_name, package_version, package_architecture, series, fallback)
 
 
 if __name__ == "__main__":
