@@ -13,10 +13,16 @@ Ubuntu Package Download
         :target: https://ubuntu-package-download.readthedocs.io/en/latest/?version=latest
         :alt: Documentation Status
 
-
-
-
 Helpful utility to download Ubuntu debian packages
+
+Process/Order of finding the package and fallback logic:
+
+    1. Attempt to find the package in the specified series and architecture
+    2. If the package is not found in the specified series and architecture attempt to find the package in the `all` architecture (amd64)
+    3. If the package is not found in the `all` architecture attempt to find the package in a previous series if the `fallback_series` flag is set to True
+    4. If the package is not found in a previous series attempt to find the previous version of the package in the same series if the `fallback_version` flag is set to True
+
+    If not found in any of the above steps log an error message to the console.
 
 
 * Free software: GNU General Public License v3

@@ -28,7 +28,9 @@ def main(
             click_type=click.Choice(["DEBUG", "INFO", "WARNING", "ERROR"]))] = "ERROR",
     package_architecture:
         Annotated[str, typer.Option(help="The architecture of the package you want to download.")] = "amd64",
-    fallback:
+    fallback_series:
+        Annotated[bool, typer.Option(help="If the exact version cannot be found in the specified Ubuntu series should we query earlier Ubuntu series?")] = True,
+    fallback_version:
         Annotated[bool, typer.Option(help="If the exact version cannot be found should we download the next version?")] = False,
     ):
     """Console script for ubuntu_package_download."""
@@ -37,12 +39,13 @@ def main(
     console.print(f"Logging level is {logging_level}")
     console.print(f"Package architecture is {package_architecture}")
     console.print(f"Series is {series}")
-    console.print(f"Fallback is {fallback}")
+    console.print(f"Fallback series is {fallback_series}")
+    console.print(f"Fallback version is {fallback_version}")
 
     level = logging.getLevelName(logging_level)
     logging.basicConfig(level=level, stream=sys.stderr, format="%(asctime)s [%(levelname)s] %(message)s")
 
-    download_deb(package_name, package_version, package_architecture, series, fallback)
+    download_deb(package_name, package_version, package_architecture, fallback_series, fallback_version)
 
 
 if __name__ == "__main__":
