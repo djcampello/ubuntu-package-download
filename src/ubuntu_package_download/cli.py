@@ -45,7 +45,7 @@ def main(
     level = logging.getLevelName(logging_level)
     logging.basicConfig(level=level, stream=sys.stderr, format="%(asctime)s [%(levelname)s] %(message)s")
 
-    download_deb(package_name, package_version, package_architecture, fallback_series, fallback_version)
+    download_deb(package_name, package_version, package_architecture, series, fallback_series, fallback_version)
 
 
 if __name__ == "__main__":
