@@ -77,9 +77,6 @@ def download_deb(
     # For the package we care about none in `main` that I have found were built prior to 14.04 so we
     # can use this as a cut off point
     series_cut_off_version = "14.04"
-    # This will be our fallback if we do not find a build for the specified architecture. Typically this is
-    # the `all` architecture
-    architecture_all_arch_tag = "amd64"
 
     lp_arch_series = lp_series.getDistroArchSeries(archtag=package_architecture)
 
@@ -92,15 +89,6 @@ def download_deb(
         print(
             f"WARNING: \tCould not find binary package {package_name} {package_architecture} version {package_version} in series {series}."
         )
-        if package_architecture != architecture_all_arch_tag:
-            print(
-                f"INFO: \tFALLBACK - Attempting to find and download the {package_name} {architecture_all_arch_tag} version {package_version}..."
-            )
-            binary_build, binary_publishing_history = _get_binary_build(archive, launchpad, lp_arch_series, package_name, package_version)
-            if binary_build and binary_publishing_history:
-                _perform_download(binary_build, binary_publishing_history, launchpad, lp_series)
-                return
-
         # before we attempt to fallback to a different versions we should check if there are any builds for the
         # same version but for a different series. We will only attempt this if the fallback_series flag is set to True
         if fallback_series:
@@ -123,15 +111,6 @@ def download_deb(
                         print(
                             f"WARNING: \tCould not find binary package {package_name} {package_architecture} version {package_version} in series {earlier_series.name}."
                         )
-                        if package_architecture != architecture_all_arch_tag:
-                            print(
-                                f"INFO: \tFALLBACK TO PREVIOUS SERIES - Attempting to find and download the {package_name} {architecture_all_arch_tag} version {package_version} from {earlier_series.name}..."
-                            )
-                            binary_build, binary_publishing_history = _get_binary_build(archive, launchpad, earlier_lp_arch_series,
-                                                                                        package_name, package_version)
-                            if binary_build and binary_publishing_history:
-                                _perform_download(binary_build, binary_publishing_history, launchpad, earlier_series)
-                                return
             print(
                 f"WARNING: \tCould not find binary package {package_name} {package_architecture} version {package_version} for any Ubuntu series."
             )
@@ -221,6 +200,15 @@ def download_deb(
             print(
                 f"ERROR: \tCould not find binary package {package_name} {package_architecture} version {package_version} in series {series}."
             )
+
+        # This will be our fallback if we do not find a build for the specified architecture. Typically this is
+        # the `all` architecture
+        architecture_all_arch_tag = "amd64"
+        if package_architecture != architecture_all_arch_tag:
+            print(
+                f"WARNING: \tFALLBACK ARCHITECTURE - Attempting to find and download the {package_name} {architecture_all_arch_tag} version {package_version}..."
+            )
+            download_deb(package_name, package_version, package_architecture=architecture_all_arch_tag, series=series, fallback_series=fallback_series, fallback_version=fallback_version)
 
 
 def _perform_download(binary_build, binary_publishing_history, launchpad, lp_series):
