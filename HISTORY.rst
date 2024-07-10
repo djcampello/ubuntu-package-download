@@ -2,6 +2,12 @@
 History
 =======
 
+0.0.5 (2024-07-10)
+------------------
+
+* Only attempt architecture fallback of all other options have been checked first
+
+
 0.0.4 (2024-06-26)
 ------------------
 
