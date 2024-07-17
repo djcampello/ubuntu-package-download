@@ -212,6 +212,7 @@ def download_deb(
 
 
 def _perform_download(binary_build, binary_publishing_history, launchpad, lp_series):
+    print(f"Downloading package from build: {binary_build}")
     binary_build_urls = binary_publishing_history.binaryFileUrls()
     for binary_build_url in binary_build_urls:
         binary_build_filename = binary_build_url.split("/")[-1]
