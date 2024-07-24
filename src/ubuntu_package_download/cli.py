@@ -17,21 +17,19 @@ console = Console()
 @app.command()
 def main(
     package_name:
-        Annotated[str, typer.Option(help="Package name")],
+        Annotated[str, typer.Option(help="Package name", default = None)] = "",
     package_version:
-        Annotated[str, typer.Option(help="Package version")],
+        Annotated[str, typer.Option(help="Package version", default = None)] = "",
     series:
-        Annotated[str, typer.Option(help="The Ubuntu series eg. '20.04' or 'focal'. This is only used when --fallback is set.")],
+        Annotated[str, typer.Option(help="The Ubuntu series eg. '20.04' or 'focal'. This is only used when --fallback is set.", default = None)] = "",
     logging_level:
-        Annotated[str, typer.Option(
-            help="How detailed would you like the output.",
-            click_type=click.Choice(["DEBUG", "INFO", "WARNING", "ERROR"]))] = "ERROR",
+        Annotated[str, typer.Option(help="How detailed would you like the output.", default = None)] = "ERROR",
     package_architecture:
-        Annotated[str, typer.Option(help="The architecture of the package you want to download.")] = "amd64",
+        Annotated[str, typer.Option(help="The architecture of the package you want to download.", default = None)] = "amd64",
     fallback_series:
-        Annotated[bool, typer.Option(help="If the exact version cannot be found in the specified Ubuntu series should we query earlier Ubuntu series?")] = True,
+        Annotated[bool, typer.Option(help="If the exact version cannot be found in the specified Ubuntu series should we query earlier Ubuntu series?", default = None)] = True,
     fallback_version:
-        Annotated[bool, typer.Option(help="If the exact version cannot be found should we download the next version?")] = False,
+        Annotated[bool, typer.Option(help="If the exact version cannot be found should we download the next version?", default = None)] = False,
     ):
     """Console script for ubuntu_package_download."""
     console.print(f"Package name is {package_name}")
